@@ -21,6 +21,6 @@ jobs:
 
           - name: 'Build Inventory Image'
             run: |
-              docker build . --tag ghcr.io/benonions/taskd:latest
+              docker build -f ./docker/Dockerfile . --tag ghcr.io/benonions/taskd:latest
               docker push ghcr.io/benonions/taskd:latest
 
