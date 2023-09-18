@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "taskd.fullname" . }}
+  labels:
+    {{- include "taskd.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "taskd.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "taskd.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: taskd
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: taskd-port
+              containerPort: 53589
+          volumeMounts:
+            - name: taskd-data
+              mountPath: /var/taskd
+      volumes:
+        - name: taskd-data
+          persistentVolumeClaim:
+            claimName: {{ include "taskd.fullname" . }}
+

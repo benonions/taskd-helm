@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "taskd.fullname" . }}
+  labels:
+    {{- include "taskd.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: taskd-port
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: {{ include "taskd.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+
